@@ -15,11 +15,6 @@ int main()                                    // main function
       high(26);                               // Turn on LED P26
       high(27);                               // Turn on LED P27
     }
-    if(button1 == 0)                          // If "On" button is not pressed
-    {
-      pause(26);                              // Leave LED P26 in its current state
-      pause(27);                              // Leave LED P27 in its current state
-    }
     if(button2 == 1)                          // If "Off" button is pressed
     {
       low(26);                                // Turn off LED P26
