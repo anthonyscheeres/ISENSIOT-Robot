@@ -1,19 +1,18 @@
 /*
-  Twee verschillende tonen genereren met de piezo speaker,
-  door de whiskers contact te laten maken met de 3-pin headers.
+  Blank Simple Project.c
+  http://learn.parallax.com/propeller-c-tutorials 
 */
-
-#include "simpletools.h"                      // Include simpletools
+#include "simpletools.h"                      
 #include <sys/time.h>
-
-int main()                                    // main function
+int main()                                    
 {
-  while(1)                                    // Endless loop
+  while(1)
   {
     struct timeval start, stop;
     double secs = 0;
 
-    gettimeofday(&start, NULL);    
+    gettimeofday(&start, NULL);
+
     int whiskerL = input(9);                  // Left whisker = P9
     int whiskerR = input(6); 
                      // Right whisker = P6
@@ -24,15 +23,14 @@ int main()                                    // main function
     if(whiskerR == 0)                         // When right whisker makes contact
     {          
       freqout(1, 1, 2000);                    // Speaker tone P1, 1 ms, 2 KHz
-    }
+    }                            
+
     gettimeofday(&stop, NULL);
     secs = (double)(stop.tv_usec - start.tv_usec) / 1000000 + (double)(stop.tv_sec - start.tv_sec);
     printf("time taken %f sec\n",secs);
-    
+  
     int SampleRate = (1/secs);
     printf("SampleRate %d Hz\n", SampleRate);
+    //pause(200);
   }
-}   
-
-//invoerbereik: -oneindig tot oneindig
-//sampling rate: ?
+}
