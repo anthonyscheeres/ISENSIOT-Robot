@@ -43,7 +43,7 @@ void scan_area_in_degrees_by_amount_of_turns(double area_in_degrees, int amount_
       print("the closest object distance = %d at %f degrees\n", closest_object_distance, closest_object_position_in_degrees);
     }
     
-    if(object_distance > furthest_object_distance && object_distance < 50)
+    if(object_distance > furthest_object_distance && object_distance < 200)
     {
       furthest_object_distance = object_distance;
       print("the furthest object distance = %d\n", furthest_object_distance);
