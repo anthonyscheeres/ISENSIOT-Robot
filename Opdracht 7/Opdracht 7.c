@@ -1,7 +1,9 @@
 #include "simpletools.h" 
-#include "abdrive.h"
+#include "abdrive360.h"
 #include "ping.h"
 
+void scan_area_in_degrees_by_amount_of_turns(double area_in_degrees, int amount_of_turns);
+int measure_object_distance();
 void drive_distance_in_cm(double distanceInCm);
 void turn_in_direction_by_degrees(char direction, double degrees);
 
@@ -9,42 +11,75 @@ const double tickDistance = 3.25; // 1 tick = 3.25mm
 
 int main()
 {
-  int closest_object_distance = 330;
-  int position_of_closest_object_in_degrees;
-  
-  while (1)
-  {
-    for(int i = 0; i < 6; i++)
-    {
-      turn_in_direction_by_degrees('r', 20);
-      pause(500);
-      int object_distance = ping_cm(8);
-      int current_position_in_degrees = (i * 20) + 20;
-      
-      print("object distance at %d = %d\n", current_position_in_degrees, object_distance);
-      
-      if (object_distance < closest_object_distance)
-      {
-        closest_object_distance = object_distance;
-        position_of_closest_object_in_degrees = current_position_in_degrees;
-        print("the closest object distance = %d\n", closest_object_distance);
-      }      
-      
-      pause(500);
-    }
-    
-    int degrees_to_turn_back_to_closest_object = 120 - position_of_closest_object_in_degrees;
-    int total_drive_distance = closest_object_distance + 5;
-  
-    turn_in_direction_by_degrees('l', degrees_to_turn_back_to_closest_object);
-    drive_distance_in_cm(total_drive_distance);
-    turn_in_direction_by_degrees('l', position_of_closest_object_in_degrees);
-    
-    closest_object_distance = 330;
-    position_of_closest_object_in_degrees = 0;
-    pause(1000);
+  while(1)
+  {  
+    scan_area_in_degrees_by_amount_of_turns(180, 18);
   }  
 }
+
+void scan_area_in_degrees_by_amount_of_turns(double area_in_degrees, int amount_of_turns)
+{
+  double degrees_per_turn = area_in_degrees / amount_of_turns;
+  print("degrees per turn = %f\n", degrees_per_turn);
+  
+  int object_distance;
+  
+  int closest_object_distance = measure_object_distance();
+  double closest_object_position_in_degrees = 0;
+  print("the closest object distance = %d at %f degrees\n", closest_object_distance, closest_object_position_in_degrees);
+  
+  int furthest_object_distance = measure_object_distance();
+  print("the furthest object distance = %d\n", furthest_object_distance);
+  
+  for(int i = 0; i < amount_of_turns; i++)
+  {
+    turn_in_direction_by_degrees('r', degrees_per_turn);
+    object_distance = measure_object_distance();
+    
+    if(object_distance < closest_object_distance)
+    {
+      closest_object_distance = object_distance;
+      closest_object_position_in_degrees = (i * degrees_per_turn) + degrees_per_turn;
+      print("the closest object distance = %d at %f degrees\n", closest_object_distance, closest_object_position_in_degrees);
+    }
+    
+    if(object_distance > furthest_object_distance && object_distance < 50)
+    {
+      furthest_object_distance = object_distance;
+      print("the furthest object distance = %d\n", furthest_object_distance);
+    }
+  }
+  
+  int closest_object_position_in_turns = closest_object_position_in_degrees / degrees_per_turn;
+  int amount_of_turns_back_to_closest_object = amount_of_turns - closest_object_position_in_turns;
+  
+  for(int i = 0; i < amount_of_turns_back_to_closest_object; i++)
+  {
+    turn_in_direction_by_degrees('l', degrees_per_turn);
+  }  
+  
+  drive_distance_in_cm(furthest_object_distance);
+  
+  int amount_of_turns_back_to_base_position = amount_of_turns - amount_of_turns_back_to_closest_object;
+  
+  for(int i = 0; i < amount_of_turns_back_to_base_position; i++)
+  {
+    turn_in_direction_by_degrees('l', degrees_per_turn);
+  }  
+  
+  // turn_in_direction_by_degrees('l', area_in_degrees - closest_object_position_in_degrees);
+  // drive_distance_in_cm(furthest_object_distance);
+  // turn_in_direction_by_degrees('l', closest_object_position_in_degrees);
+}
+
+int measure_object_distance()
+{
+  int object_distance = ping_cm(8);
+  
+  return object_distance;
+}
+
+
 
 void drive_distance_in_cm(double distanceInCm)
 {
