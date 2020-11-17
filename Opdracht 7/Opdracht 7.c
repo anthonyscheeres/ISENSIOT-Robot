@@ -13,7 +13,7 @@ int main()
 {
   while(1)
   {  
-    scan_area_in_degrees_by_amount_of_turns(180, 18);
+    scan_area_in_degrees_by_amount_of_turns(120, 12);
   }  
 }
 
@@ -28,7 +28,7 @@ void scan_area_in_degrees_by_amount_of_turns(double area_in_degrees, int amount_
   double closest_object_position_in_degrees = 0;
   print("the closest object distance = %d at %f degrees\n", closest_object_distance, closest_object_position_in_degrees);
   
-  int furthest_object_distance = measure_object_distance();
+  int furthest_object_distance = 0;
   print("the furthest object distance = %d\n", furthest_object_distance);
   
   for(int i = 0; i < amount_of_turns; i++)
