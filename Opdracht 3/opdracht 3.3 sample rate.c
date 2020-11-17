@@ -1,11 +1,8 @@
-/*
-  Blank Simple Project.c
-  http://learn.parallax.com/propeller-c-tutorials 
-*/
 #include "simpletools.h"                      
 #include "abdrive.h"
 #include "ping.h"
 #include <sys/time.h>
+
 int main()                                    
 {
   double totaalSeconden = 0;
